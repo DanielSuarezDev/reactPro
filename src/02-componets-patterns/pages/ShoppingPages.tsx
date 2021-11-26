@@ -5,34 +5,45 @@ import {
   ProductButtons,
 } from "../components";
 import "../styles/custom-styles.css";
-
+import { useShoppingCart } from "../hooks/useShoppingCart";
+import { Products } from "../data/products";
 export const ShoppingPages = () => {
-  const product = {
-    id: 1,
-    title: "Coffe Card",
-    img: "./coffee-mug.png",
-  };
+  const { handleProductChange, shopingCart } = useShoppingCart();
 
   return (
     <div>
       <h1>Shopping Store</h1>
       <hr />
       <div style={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-        <ProductCard product={product} className="bg-dark text-white">
-          <ProductImages className="custom-image" />
-          <ProductTitle title="ss" />
-          <ProductButtons className="custom-button" />
-        </ProductCard>
+        {Products.map((product) => (
+          <ProductCard
+            product={product}
+            className="bg-dark text-white"
+            key={product.id}
+            value={shopingCart[product.id]?.count ?? 0}
+            onChange={handleProductChange}
+          >
+            <ProductImages className="custom-image" />
+            <ProductTitle />
+            <ProductButtons className="custom-button" />
+          </ProductCard>
+        ))}
+      </div>
 
-        <ProductCard product={product} style={{ color: "red" }}>
-          <ProductImages
-            style={{ boxShadow: "10px 10px 10px rgba(0,0,0,0.2)" }}
-          />
-          <ProductTitle style={{ fontWeight: "bold" }} title="hi" />
-          <ProductButtons
-            style={{ display: "flex", justifyContent: "center" }}
-          />
-        </ProductCard>
+      <div className="shopping-cart">
+        {Object.entries(shopingCart).map(([key, product]) => (
+          <ProductCard
+            key={key}
+            product={product}
+            className="bg-dark text-white"
+            style={{ width: "100px" }}
+            value={product.count}
+            onChange={handleProductChange}
+          >
+            <ProductImages className="custom-image" />
+            <ProductButtons className="custom-button" />
+          </ProductCard>
+        ))}
       </div>
     </div>
   );
